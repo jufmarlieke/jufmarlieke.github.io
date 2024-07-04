@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woorden Flitsen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: darkgreen;
+            margin-top: 20px;
+        }
+        #controls, #subjectMenu, #readingControls {
+            background-color: #4caf50;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            width: 300px; /* Uniforme breedte voor alle elementen */
+        }
+        #controls label, #subjectMenu label, #readingControls label {
+            display: block;
+            margin-top: 10px;
+            color: #fff;
+            font-weight: bold;
+        }
+        #controls select, #controls input[type="number"], #controls input[type="file"], #controls button,
+        #subjectMenu button, #readingControls select, #readingControls input[type="number"], #readingControls button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%; /* Volledige breedte */
+            box-sizing: border-box; /* Zodat padding wordt meegerekend in de breedte */
+        }
+        #controls button, #subjectMenu button, #readingControls button {
+            background-color: #ff5722;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #controls button:hover, #subjectMenu button:hover, #readingControls button:hover {
+            background-color: #e64a19;
+        }
+        #wordDisplay {
+            font-size: 72px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+        }
+        #resultDisplay {
+            font-size: 2em;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+            height: 20vh;
+            overflow-y: auto;
+            width: 80%;
+        }
+        #resultDisplay div {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 5px;
+        }
+        #controlButtons, #closeButton, #returnButton {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        #controlButtons button, #closeButton, #returnButton {
+            padding: 10px 20px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+        #controlButtons button:hover, #closeButton:hover, #returnButton:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <h1>Oefenprogramma</h1>
+    <div id="subjectMenu">
+        <button onclick="showControls('taal')">Taal</button>
+        <button onclick="showControls('spelling')">Spelling</button>
+        <button onclick="showControls('lezen')">Lezen</button>
+        <button onclick="showControls('rekenen')">Rekenen</button>
+    </div>
+    <div id="controls" style="display: none;">
+        <div class="form-group">
+            <label for="duration">Duur per woord (seconden):</label>
+            <select id="duration">
+                <option value="2000">2</option>
+                <option value="5000">5</option>
+                <option value="10000">10</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="blankDuration">Duur blanco scherm (seconden):</label>
+            <select id="blankDuration">
+                <option value="2000">2</option>
+                <option value="5000">5</option>
+                <option value="10000">10</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="wordCount">Aantal woorden:</label>
+            <input type="number" id="wordCount" min="1" max="100" value="10">
+        </div>
+        <div class="form-group">
+            <label for="fileInput">Woordenlijsten (txt-bestanden):</label>
+            <input type="file" id="fileInput" accept=".txt" multiple>
+        </div>
+        <button onclick="startFlashing()">Start</button>
+    </div>
+    <div id="readingControls" style="display: none;">
+        <div class="form-group">
+            <label for="readingSpeed">Kies snelheid:</label>
+            <select id="readingSpeed">
+                <option value="4000">Snelheid 1: 4 sec per woord</option>
+                <option value="2000">Snelheid 2: 2 sec per woord</option>
+                <option value="1000">Snelheid 3: 1 sec per woord</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="readingWordCount">Aantal woorden:</label>
+            <input type="number" id="readingWordCount" min="1" max="100" value="10">
+        </div>
+        <div class="form-group">
+            <label for="readingFileInput">Woordenlijsten (txt-bestanden):</label>
+            <input type="file" id="readingFileInput" accept=".txt" multiple>
+        </div>
+        <button onclick="startReading()">Start</button>
+    </div>
+    <div id="wordDisplay"></div>
+    <div id="resultDisplay"></div>
+    <div id="controlButtons">
+        <button onclick="pauseFlashing()">Pauze</button>
+        <button onclick="stopFlashing()">Stop</button>
+    </div>
+    <button id="closeButton" onclick="closeResults()">Sluiten</button>
+    <button id="returnButton" onclick="returnToMenu()">Terug naar menu</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
