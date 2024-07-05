@@ -1,11 +1,11 @@
 let words = [];
 let usedWords = [];
+let selectedPakketten = [];
 let wordDisplayDuration = 2000;
 let blankDisplayDuration = 2000;
 let wordCount = 10;
 let flashingTimeout;
 let flashingPaused = false;
-let currentWordIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPakketten();
@@ -18,19 +18,20 @@ function loadPakketten() {
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
         let pakketElement = document.createElement('div');
         pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakket(woorden, 'selectedPakketSpelling');
+        pakketElement.onclick = () => selectPakket(woorden, pakket, 'selectedPakketSpelling');
         spellingSelectie.appendChild(pakketElement);
 
         pakketElement = document.createElement('div');
         pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakket(woorden, 'selectedPakketLezen');
+        pakketElement.onclick = () => selectPakket(woorden, pakket, 'selectedPakketLezen');
         lezenSelectie.appendChild(pakketElement);
     }
 }
 
-function selectPakket(woorden, elementId) {
-    words = woorden;
-    document.getElementById(elementId).innerText = `Geselecteerd pakket: ${woorden.length} woorden`;
+function selectPakket(woorden, pakket, elementId) {
+    words = [...words, ...woorden];
+    selectedPakketten.push(pakket);
+    document.getElementById(elementId).innerText = `Geselecteerde pakketten: ${selectedPakketten.join(', ')}`;
 }
 
 function showControls(subject) {
