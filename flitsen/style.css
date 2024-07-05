@@ -43,7 +43,7 @@ h1 {
     transition: background-color 0.3s;
 }
 #controls button:hover, #subjectMenu button:hover, #readingControls button:hover {
-    background-color: #e64a19;
+    background-color: #166ab1;
 }
 #wordDisplay {
     font-size: 72px;
@@ -83,7 +83,7 @@ h1 {
     margin-left: 10px;
 }
 #controlButtons button:hover, #closeButton:hover, #returnButton:hover {
-    background-color: #e64a19;
+    background-color: #166ab1;
 }
 
 /* Dropdown Button */
