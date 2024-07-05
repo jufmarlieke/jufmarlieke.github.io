@@ -7,6 +7,32 @@ let flashingTimeout;
 let flashingPaused = false;
 let currentWordIndex = 0;
 
+document.addEventListener('DOMContentLoaded', () => {
+    loadPakketten();
+});
+
+function loadPakketten() {
+    const spellingSelectie = document.getElementById('pakketSelectieSpelling');
+    const lezenSelectie = document.getElementById('pakketSelectieLezen');
+    
+    for (const [pakket, woorden] of Object.entries(woordpakketten)) {
+        let pakketElement = document.createElement('div');
+        pakketElement.innerText = pakket;
+        pakketElement.onclick = () => selectPakket(woorden, 'selectedPakketSpelling');
+        spellingSelectie.appendChild(pakketElement);
+
+        pakketElement = document.createElement('div');
+        pakketElement.innerText = pakket;
+        pakketElement.onclick = () => selectPakket(woorden, 'selectedPakketLezen');
+        lezenSelectie.appendChild(pakketElement);
+    }
+}
+
+function selectPakket(woorden, elementId) {
+    words = woorden;
+    document.getElementById(elementId).innerText = `Geselecteerd pakket: ${woorden.length} woorden`;
+}
+
 function showControls(subject) {
     document.getElementById('subjectMenu').style.display = 'none';
     if (subject === 'spelling') {
@@ -145,32 +171,4 @@ function stopFlashing() {
     clearTimeout(flashingTimeout);
     document.getElementById('wordDisplay').innerText = '';
     showResults();
-}
-
-function handleFileSelect(event) {
-    const files = event.target.files;
-    words = []; // Reset words array
-    let filePromises = [];
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        const filePromise = new Promise((resolve, reject) => {
-            reader.onload = function(e) {
-                const fileWords = e.target.result.split(/\r?\n/).filter(Boolean);
-                resolve(fileWords);
-            };
-            reader.onerror = function() {
-                reject(reader.error);
-            };
-            reader.readAsText(file);
-        });
-        filePromises.push(filePromise);
-    }
-
-    Promise.all(filePromises).then(fileWordsArrays => {
-        words = fileWordsArrays.flat();
-    }).catch(error => {
-        console.error("Error reading files:", error);
-    });
 }

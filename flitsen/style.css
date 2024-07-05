@@ -117,8 +117,9 @@ h1 {
     padding: 10px;
 }
 
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
+/* Show the dropdown menu on hover or focus */
+.dropdown:hover .dropdown-content,
+.dropdown-content:hover {
     display: block;
 }
 
@@ -127,4 +128,11 @@ h1 {
     display: block;
     margin: 5px 0;
     cursor: pointer;
+}
+
+/* Style for selected pakket */
+.selected-pakket {
+    font-size: 1em;
+    color: #000;
+    margin-bottom: 10px;
 }

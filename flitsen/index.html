@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Woorden Flitsen</title>
     <link rel="stylesheet" href="style.css">
+    <script src="woordpakketten.js"></script>
 </head>
 <body>
     <h1>Oefenprogramma</h1>
@@ -36,11 +37,13 @@
             <input type="number" id="wordCount" min="1" max="100" value="10">
         </div>
         <div class="form-group">
+            <label for="selectedPakketSpelling">Geselecteerd woordpakket:</label>
+            <div id="selectedPakketSpelling" class="selected-pakket"></div>
             <label for="fileInput">Woordpakket kiezen:</label>
             <div class="dropdown">
                 <button class="dropbtn">Selecteer woordpakket</button>
-                <div class="dropdown-content">
-                    <input type="file" id="fileInput" accept=".txt" multiple onchange="handleFileSelect(event)">
+                <div class="dropdown-content" id="pakketSelectieSpelling">
+                    <!-- Pakketten worden hier dynamisch geladen -->
                 </div>
             </div>
         </div>
@@ -60,11 +63,13 @@
             <input type="number" id="readingWordCount" min="1" max="100" value="10">
         </div>
         <div class="form-group">
+            <label for="selectedPakketLezen">Geselecteerd woordpakket:</label>
+            <div id="selectedPakketLezen" class="selected-pakket"></div>
             <label for="readingFileInput">Woordpakket kiezen:</label>
             <div class="dropdown">
                 <button class="dropbtn">Selecteer woordpakket</button>
-                <div class="dropdown-content">
-                    <input type="file" id="readingFileInput" accept=".txt" multiple onchange="handleFileSelect(event)">
+                <div class="dropdown-content" id="pakketSelectieLezen">
+                    <!-- Pakketten worden hier dynamisch geladen -->
                 </div>
             </div>
         </div>
