@@ -46,9 +46,43 @@ function flashReadingWord() {
     }, wordDisplayDurationLezen);
 }
 
+function showResults() {
+    const resultDisplay = document.getElementById('resultDisplay');
+    resultDisplay.innerHTML = ''; // Clear previous results
+    usedWordsLezen.forEach(word => {
+        const wordElement = document.createElement('div');
+        wordElement.innerText = word;
+        resultDisplay.appendChild(wordElement);
+    });
+    document.getElementById('closeButton').style.display = 'inline';
+    document.getElementById('returnButton').style.display = 'inline';
+    document.getElementById('controlButtons').style.display = 'none';
+}
+
+function pauseFlashing() {
+    if (flashingPausedLezen) {
+        flashingPausedLezen = false;
+        flashReadingWord();
+    } else {
+        flashingPausedLezen = true;
+        clearTimeout(flashingTimeoutLezen);
+    }
+}
+
+function stopFlashing() {
+    clearTimeout(flashingTimeoutLezen);
+    document.getElementById('wordDisplay').innerText = '';
+    showResults();
+}
+
 function selectPakketLezen(woorden, pakket) {
-    wordsLezen = [...wordsLezen, ...woorden];
-    selectedPakkettenLezen.push(pakket);
+    if (!selectedPakkettenLezen.includes(pakket)) {
+        wordsLezen = [...wordsLezen, ...woorden];
+        selectedPakkettenLezen.push(pakket);
+    } else {
+        wordsLezen = wordsLezen.filter(word => !woorden.includes(word));
+        selectedPakkettenLezen = selectedPakkettenLezen.filter(p => p !== pakket);
+    }
     document.getElementById('selectedPakketLezen').innerText = `Geselecteerde pakketten: ${selectedPakkettenLezen.join(', ')}`;
 }
 
