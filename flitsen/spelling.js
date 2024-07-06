@@ -77,12 +77,13 @@ function stopFlashing() {
 }
 
 function selectPakketSpelling(woorden, pakket) {
-    if (!selectedPakkettenSpelling.includes(pakket)) {
+    const index = selectedPakkettenSpelling.indexOf(pakket);
+    if (index === -1) {
         wordsSpelling = [...wordsSpelling, ...woorden];
         selectedPakkettenSpelling.push(pakket);
     } else {
         wordsSpelling = wordsSpelling.filter(word => !woorden.includes(word));
-        selectedPakkettenSpelling = selectedPakkettenSpelling.filter(p => p !== pakket);
+        selectedPakkettenSpelling.splice(index, 1);
     }
     document.getElementById('selectedPakketSpelling').innerText = `Geselecteerde pakketten: ${selectedPakkettenSpelling.join(', ')}`;
 }
