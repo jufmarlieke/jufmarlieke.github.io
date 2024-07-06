@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="week-navigation">
+            <button onclick="prevWeek()">Vorige Week</button>
+            <span id="week-label">Week 1</span>
+            <button onclick="nextWeek()">Volgende Week</button>
+        </div>
+        <div class="vak-form">
+            <label for="vak-naam">Vak Naam:</label>
+            <input type="text" id="vak-naam">
+            <button onclick="addVak()">Voeg Vak Toe</button>
+        </div>
+        <table class="planning-table">
+            <thead>
+                <tr>
+                    <th>Tijd</th>
+                    <th>Maandag</th>
+                    <th>Dinsdag</th>
+                    <th>Woensdag</th>
+                    <th>Donderdag</th>
+                    <th>Vrijdag</th>
+                </tr>
+            </thead>
+            <tbody id="planning-body">
+                <!-- Planning rows worden hier toegevoegd door JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

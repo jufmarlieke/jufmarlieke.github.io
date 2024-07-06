@@ -1,0 +1,26 @@
+/* CSS styling */
+body {
+    font-family: Arial, sans-serif;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.week-navigation, .vak-form {
+    margin-bottom: 20px;
+}
+.planning-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.planning-table th, .planning-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.planning-table th {
+    background-color: #f2f2f2;
+}
+.vak-item {
+    cursor: pointer;
+}
