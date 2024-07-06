@@ -36,6 +36,7 @@ function selectPakket(woorden, pakket, elementId) {
 
 function showControls(subject) {
     document.getElementById('subjectMenu').style.display = 'none';
+    document.getElementById('backToMenuButton').style.display = 'block';
     if (subject === 'spelling') {
         document.getElementById('controls').style.display = 'block';
     } else if (subject === 'lezen') {
@@ -144,6 +145,7 @@ function closeResults() {
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
     document.getElementById('subjectMenu').style.display = 'block';
+    document.getElementById('backToMenuButton').style.display = 'none';
 }
 
 function returnToMenu() {
@@ -156,6 +158,7 @@ function returnToMenu() {
     document.getElementById('subjectMenu').style.display = 'block';
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
+    document.getElementById('backToMenuButton').style.display = 'none';
 }
 
 function pauseFlashing() {

@@ -66,13 +66,13 @@ h1 {
     margin: 5px 10px;
     padding: 5px;
 }
-#controlButtons, #closeButton, #returnButton {
+#controlButtons, #closeButton, #returnButton, #backToMenuButton {
     display: none;
     position: fixed;
     bottom: 20px;
     right: 20px;
 }
-#controlButtons button, #closeButton, #returnButton {
+#controlButtons button, #closeButton, #returnButton, #backToMenuButton {
     padding: 10px 20px;
     background-color: #ff5722;
     color: white;
@@ -82,7 +82,7 @@ h1 {
     transition: background-color 0.3s;
     margin-left: 10px;
 }
-#controlButtons button:hover, #closeButton:hover, #returnButton:hover {
+#controlButtons button:hover, #closeButton:hover, #returnButton:hover, #backToMenuButton:hover {
     background-color: #166ab1;
 }
 
