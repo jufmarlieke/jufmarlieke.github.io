@@ -68,9 +68,11 @@ h1 {
 }
 #controlButtons, #closeButton, #returnButton, #backToMenuButton {
     display: none;
+}
+#controlButtons {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px;
 }
 #controlButtons button, #closeButton, #returnButton, #backToMenuButton {
     padding: 10px 20px;
