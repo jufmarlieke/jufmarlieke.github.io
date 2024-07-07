@@ -4,7 +4,6 @@ let selectedPakkettenSpelling = [];
 let wordDisplayDurationSpelling = 2000;
 let blankDisplayDurationSpelling = 2000;
 let wordCountSpelling = 10;
-let flashingTimeoutSpelling;
 let flashingPausedSpelling = false;
 
 function startFlashing() {
@@ -43,7 +42,9 @@ function flashWordSpelling() {
 
     flashingTimeoutSpelling = setTimeout(() => {
         document.getElementById('wordDisplay').innerText = '';
-        flashingTimeoutSpelling = setTimeout(flashWordSpelling, blankDisplayDurationSpelling);
+        if (!flashingPausedSpelling) {
+            flashingTimeoutSpelling = setTimeout(flashWordSpelling, blankDisplayDurationSpelling);
+        }
     }, wordDisplayDurationSpelling);
 }
 

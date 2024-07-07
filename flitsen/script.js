@@ -1,3 +1,6 @@
+let flashingTimeoutSpelling;
+let flashingTimeoutLezen;
+
 document.addEventListener('DOMContentLoaded', () => {
     loadPakketten();
 });
