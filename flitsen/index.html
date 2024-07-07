@@ -51,6 +51,11 @@
             </div>
         </div>
         <button onclick="startFlashing()">Start</button>
+        <div class="form-group">
+            <label for="newPakketWords">Nieuwe woorden (gescheiden door komma's):</label>
+            <input type="text" id="newPakketWords">
+        </div>
+        <button onclick="addNewPakket('spelling')">Voeg nieuw pakket toe</button>
     </div>
     <div id="readingControls" style="display: none;">
         <div class="form-group">
@@ -77,6 +82,11 @@
             </div>
         </div>
         <button onclick="startReading()">Start</button>
+        <div class="form-group">
+            <label for="newPakketWordsLezen">Nieuwe woorden (gescheiden door komma's):</label>
+            <input type="text" id="newPakketWordsLezen">
+        </div>
+        <button onclick="addNewPakket('lezen')">Voeg nieuw pakket toe</button>
     </div>
     <div id="wordDisplay"></div>
     <div id="resultDisplay"></div>

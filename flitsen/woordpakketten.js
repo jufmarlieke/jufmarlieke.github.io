@@ -1,5 +1,5 @@
 const woordpakketten = {
-    pakket1: [
+    wp2: [
        "gave", 
         "scheve",
         "stijve",
@@ -21,10 +21,28 @@ const woordpakketten = {
         "de paleizen",
         "de vazen",
     ],
-    pakket2: [
-        "woordA",
-        "woordB",
-        "woordC"
+    wp3: [
+        "veilig",
+        "weinig",
+        "eigenwijs",
+        "de eigenaar",
+        "de aarbei",
+        "de reiziger",
+        "de reiger",
+        "de kapitein",
+        "de opleiding",
+        "het afscheid",
+        "ijverig", 
+        "nijdig",
+        "tijdens", 
+        "tijdelijk", 
+        "vlakbij", 
+        "de dolfijn", 
+        "de woestijn", 
+        "de rozijnen", 
+        "het ontbijt", 
+        "het schilderij", 
+
         // Voeg meer woorden toe zoals nodig
     ],
     // Voeg meer pakketten toe zoals nodig

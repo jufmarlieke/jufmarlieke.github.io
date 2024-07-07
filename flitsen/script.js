@@ -87,3 +87,22 @@ function returnToMenu() {
     document.getElementById('readingControls').style.display = 'none';
     document.getElementById('backToMenuButton').style.display = 'none';
 }
+
+function addNewPakket(type) {
+    const newPakketWordsInput = type === 'spelling' ? document.getElementById('newPakketWords') : document.getElementById('newPakketWordsLezen');
+    const newPakketWords = newPakketWordsInput.value.split(',').map(word => word.trim());
+    
+    if (newPakketWords.length === 0 || newPakketWords[0] === '') {
+        alert('Voer enkele woorden in.');
+        return;
+    }
+    
+    const newPakketName = `wp${Object.keys(woordpakketten).length + 1}`;
+    woordpakketten[newPakketName] = newPakketWords;
+    
+    // Herlaad de pakketten om de nieuwe toe te voegen
+    loadPakketten();
+    
+    // Maak het invoerveld leeg
+    newPakketWordsInput.value = '';
+}
