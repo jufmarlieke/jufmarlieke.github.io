@@ -9,6 +9,10 @@ function loadPakketten() {
     const spellingSelectie = document.getElementById('pakketSelectieSpelling');
     const lezenSelectie = document.getElementById('pakketSelectieLezen');
     
+    // Leeg de huidige lijst
+    spellingSelectie.innerHTML = '';
+    lezenSelectie.innerHTML = '';
+    
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
         let pakketElementSpelling = document.createElement('div');
         pakketElementSpelling.innerText = pakket;
@@ -96,8 +100,12 @@ function addNewPakket(type) {
         alert('Voer enkele woorden in.');
         return;
     }
+
+    // Bepaal de hoogste bestaande pakketnummer en voeg 1 toe voor het nieuwe pakket
+    const existingPakketten = Object.keys(woordpakketten).filter(p => p.startsWith('wp')).map(p => parseInt(p.substring(2)));
+    const highestNumber = existingPakketten.length > 0 ? Math.max(...existingPakketten) : 0;
+    const newPakketName = `wp${highestNumber + 1}`;
     
-    const newPakketName = `wp${Object.keys(woordpakketten).length + 1}`;
     woordpakketten[newPakketName] = newPakketWords;
     
     // Herlaad de pakketten om de nieuwe toe te voegen
