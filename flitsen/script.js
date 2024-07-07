@@ -7,28 +7,16 @@ function loadPakketten() {
     const lezenSelectie = document.getElementById('pakketSelectieLezen');
     
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
-        let pakketElement = document.createElement('div');
-        pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakket(woorden, pakket, 'selectedPakketSpelling', wordsSpelling, selectedPakkettenSpelling);
-        spellingSelectie.appendChild(pakketElement);
+        let pakketElementSpelling = document.createElement('div');
+        pakketElementSpelling.innerText = pakket;
+        pakketElementSpelling.onclick = () => selectPakketSpelling(woorden, pakket);
+        spellingSelectie.appendChild(pakketElementSpelling);
 
-        pakketElement = document.createElement('div');
-        pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakket(woorden, pakket, 'selectedPakketLezen', wordsLezen, selectedPakkettenLezen);
-        lezenSelectie.appendChild(pakketElement);
+        let pakketElementLezen = document.createElement('div');
+        pakketElementLezen.innerText = pakket;
+        pakketElementLezen.onclick = () => selectPakketLezen(woorden, pakket);
+        lezenSelectie.appendChild(pakketElementLezen);
     }
-}
-
-function selectPakket(woorden, pakket, elementId, wordsArray, selectedPakkettenArray) {
-    const index = selectedPakkettenArray.indexOf(pakket);
-    if (index === -1) {
-        wordsArray.push(...woorden);
-        selectedPakkettenArray.push(pakket);
-    } else {
-        wordsArray = wordsArray.filter(word => !woorden.includes(word));
-        selectedPakkettenArray.splice(index, 1);
-    }
-    document.getElementById(elementId).innerText = `Geselecteerde pakketten: ${selectedPakkettenArray.join(', ')}`;
 }
 
 function showControls(subject) {
