@@ -42,7 +42,7 @@ function flashReadingWord() {
     flashingTimeoutLezen = setTimeout(() => {
         document.getElementById('wordDisplay').innerText = '';
         if (!flashingPausedLezen) {
-            flashingTimeoutLezen = setTimeout(flashReadingWord, blankDisplayDurationLezen);
+            flashReadingWord();
         }
     }, wordDisplayDurationLezen);
 }

@@ -43,7 +43,7 @@ function flashWordSpelling() {
     flashingTimeoutSpelling = setTimeout(() => {
         document.getElementById('wordDisplay').innerText = '';
         if (!flashingPausedSpelling) {
-            flashingTimeoutSpelling = setTimeout(flashWordSpelling, blankDisplayDurationSpelling);
+            flashWordSpelling();
         }
     }, wordDisplayDurationSpelling);
 }

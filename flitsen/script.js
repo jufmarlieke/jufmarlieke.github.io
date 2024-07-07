@@ -12,13 +12,44 @@ function loadPakketten() {
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
         let pakketElementSpelling = document.createElement('div');
         pakketElementSpelling.innerText = pakket;
-        pakketElementSpelling.onclick = () => selectPakketSpelling(woorden, pakket);
+        pakketElementSpelling.onclick = () => selectPakket(woorden, pakket, 'spelling');
         spellingSelectie.appendChild(pakketElementSpelling);
 
         let pakketElementLezen = document.createElement('div');
         pakketElementLezen.innerText = pakket;
-        pakketElementLezen.onclick = () => selectPakketLezen(woorden, pakket);
+        pakketElementLezen.onclick = () => selectPakket(woorden, pakket, 'lezen');
         lezenSelectie.appendChild(pakketElementLezen);
+    }
+}
+
+function selectPakket(woorden, pakket, type) {
+    let wordsArray, selectedPakkettenArray, elementId;
+    if (type === 'spelling') {
+        wordsArray = wordsSpelling;
+        selectedPakkettenArray = selectedPakkettenSpelling;
+        elementId = 'selectedPakketSpelling';
+    } else {
+        wordsArray = wordsLezen;
+        selectedPakkettenArray = selectedPakkettenLezen;
+        elementId = 'selectedPakketLezen';
+    }
+
+    const index = selectedPakkettenArray.indexOf(pakket);
+    if (index === -1) {
+        wordsArray.push(...woorden);
+        selectedPakkettenArray.push(pakket);
+    } else {
+        wordsArray = wordsArray.filter(word => !woorden.includes(word));
+        selectedPakkettenArray.splice(index, 1);
+    }
+
+    document.getElementById(elementId).innerText = `Geselecteerde pakketten: ${selectedPakkettenArray.join(', ')}`;
+    if (type === 'spelling') {
+        wordsSpelling = wordsArray;
+        selectedPakkettenSpelling = selectedPakkettenArray;
+    } else {
+        wordsLezen = wordsArray;
+        selectedPakkettenLezen = selectedPakkettenArray;
     }
 }
 
