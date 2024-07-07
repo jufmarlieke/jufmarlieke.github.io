@@ -138,6 +138,7 @@ function addNewPakket(type) {
     // Maak de invoervelden leeg
     newPakketNameInput.value = '';
     newPakketWordsInput.value = '';
+    alert('Nieuw pakket succesvol toegevoegd.');
 }
 
 function editPakket(pakket) {
@@ -146,6 +147,7 @@ function editPakket(pakket) {
         woordpakketten[pakket] = newWords.split(',').map(word => word.trim());
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
         loadPakketten();
+        alert(`Pakket "${pakket}" succesvol bewerkt.`);
     }
 }
 
@@ -154,5 +156,6 @@ function deletePakket(pakket) {
         delete woordpakketten[pakket];
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
         loadPakketten();
+        alert(`Pakket "${pakket}" succesvol verwijderd.`);
     }
 }
