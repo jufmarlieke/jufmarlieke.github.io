@@ -66,6 +66,6 @@ const woordpakketten = {
          "de woestijn", 
          "de rozijnen", 
          "het ontbijt", 
-         "het schilderij", 
-        },
+         "het schilderij",
+        ] ,
 };
