@@ -1,9 +1,9 @@
 const woordpakketten = {
     groep4: {
         pakket1: [
-            "gave", 
-            "scheve",
-            "stijve",
+            "test", 
+            "2test",
+            "test3",
             // Voeg meer woorden toe zoals nodig
         ],
         pakket2: [
