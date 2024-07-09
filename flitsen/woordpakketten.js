@@ -1,4 +1,4 @@
-const woordpakketten = {
+const woordpakketten =  {
     groep4: {
         pakket1: [
             "test", 
@@ -68,4 +68,5 @@ const woordpakketten = {
          "het ontbijt", 
          "het schilderij",
         ] ,
+    }
 };

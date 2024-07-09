@@ -1,86 +1,48 @@
-let wordsSpelling = [];
-let usedWordsSpelling = [];
-let selectedPakkettenSpelling = [];
-let wordDisplayDurationSpelling = 2000;
-let blankDisplayDurationSpelling = 2000;
-let wordCountSpelling = 10;
-let flashingPausedSpelling = false;
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('groupSelect').addEventListener('change', loadPakkettenSpelling);
+    loadPakkettenSpelling();
+});
 
-function startFlashing() {
-    // Haal de instellingen op
-    wordDisplayDurationSpelling = parseInt(document.getElementById('duration').value);
-    blankDisplayDurationSpelling = parseInt(document.getElementById('blankDuration').value);
-    wordCountSpelling = parseInt(document.getElementById('wordCount').value);
-
-    // Reset de gebruikte woordenlijst en toon de resultatenknop niet
-    usedWordsSpelling = [];
-    document.getElementById('resultDisplay').innerHTML = '';
-    document.getElementById('closeButton').style.display = 'none';
-    document.getElementById('returnButton').style.display = 'none';
-
-    // Verberg de bedieningspanelen en toon de bedieningsknoppen
-    document.getElementById('controls').style.display = 'none';
-    document.getElementById('controlButtons').style.display = 'block';
-
-    // Begin met woorden flitsen
-    flashWordSpelling();
-}
-
-function flashWordSpelling() {
-    if (usedWordsSpelling.length >= wordCountSpelling || usedWordsSpelling.length >= wordsSpelling.length) {
-        showResults();
+function loadPakkettenSpelling() {
+    const group = document.getElementById('groupSelect').value;
+    const spellingSelectie = document.getElementById('pakketSelectieSpelling');
+    
+    spellingSelectie.innerHTML = '';
+    
+    if (!woordpakketten[group]) {
         return;
     }
 
-    let word;
-    do {
-        word = wordsSpelling[Math.floor(Math.random() * wordsSpelling.length)];
-    } while (usedWordsSpelling.includes(word));
+    const pakketten = woordpakketten[group];
 
-    usedWordsSpelling.push(word);
-    document.getElementById('wordDisplay').innerText = word;
-
-    flashingTimeoutSpelling = setTimeout(() => {
-        document.getElementById('wordDisplay').innerText = '';
-        if (!flashingPausedSpelling) {
-            flashWordSpelling();
-        }
-    }, wordDisplayDurationSpelling);
-}
-
-function showResults() {
-    const resultDisplay = document.getElementById('resultDisplay');
-    resultDisplay.innerHTML = ''; // Clear previous results
-    usedWordsSpelling.forEach(word => {
-        const wordElement = document.createElement('div');
-        wordElement.innerText = word;
-        resultDisplay.appendChild(wordElement);
-    });
-    document.getElementById('closeButton').style.display = 'inline';
-    document.getElementById('returnButton').style.display = 'inline';
-    document.getElementById('controlButtons').style.display = 'none';
-}
-
-function pauseFlashing() {
-    if (flashingPausedSpelling) {
-        flashingPausedSpelling = false;
-        flashWordSpelling();
-    } else {
-        flashingPausedSpelling = true;
-        clearTimeout(flashingTimeoutSpelling);
+    for (const [pakket, woorden] of Object.entries(pakketten)) {
+        let pakketElementSpelling = document.createElement('div');
+        pakketElementSpelling.className = 'pakket-element';
+        pakketElementSpelling.innerHTML = `
+            <div class="pakket-title">${pakket}</div>
+            <div class="pakket-buttons">
+                <button class="edit-button">Bewerken</button>
+                <button class="delete-button">Verwijderen</button>
+            </div>
+        `;
+        pakketElementSpelling.querySelector('.pakket-title').onclick = () => selectPakketSpelling(woorden, pakket);
+        pakketElementSpelling.querySelector('.edit-button').onclick = (e) => {
+            e.stopPropagation();
+            editPakketSpelling(pakket, group);
+        };
+        pakketElementSpelling.querySelector('.delete-button').onclick = (e) => {
+            e.stopPropagation();
+            deletePakketSpelling(pakket, group);
+        };
+        spellingSelectie.appendChild(pakketElementSpelling);
     }
 }
 
-function stopFlashing() {
-    clearTimeout(flashingTimeoutSpelling);
-    document.getElementById('wordDisplay').innerText = '';
-    showResults();
-}
-
 function selectPakketSpelling(woorden, pakket) {
+    const group = document.getElementById('groupSelect').value;
     const index = selectedPakkettenSpelling.indexOf(pakket);
     if (index === -1) {
-        wordsSpelling = [...wordsSpelling, ...woorden];
+        wordsSpelling.push(...woorden);
         selectedPakkettenSpelling.push(pakket);
     } else {
         wordsSpelling = wordsSpelling.filter(word => !woorden.includes(word));
@@ -89,12 +51,21 @@ function selectPakketSpelling(woorden, pakket) {
     document.getElementById('selectedPakketSpelling').innerText = `Geselecteerde pakketten: ${selectedPakkettenSpelling.join(', ')}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const spellingSelectie = document.getElementById('pakketSelectieSpelling');
-    for (const [pakket, woorden] of Object.entries(woordpakketten)) {
-        let pakketElement = document.createElement('div');
-        pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakketSpelling(woorden, pakket);
-        spellingSelectie.appendChild(pakketElement);
+function editPakketSpelling(pakket, group) {
+    const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[group][pakket].join(', '));
+    if (newWords !== null) {
+        woordpakketten[group][pakket] = newWords.split(',').map(word => word.trim());
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakkettenSpelling();
+        alert(`Pakket "${pakket}" succesvol bewerkt.`);
     }
-});
+}
+
+function deletePakketSpelling(pakket, group) {
+    if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
+        delete woordpakketten[group][pakket];
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakkettenSpelling();
+        alert(`Pakket "${pakket}" succesvol verwijderd.`);
+    }
+}

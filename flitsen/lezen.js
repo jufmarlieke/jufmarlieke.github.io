@@ -1,85 +1,48 @@
-let wordsLezen = [];
-let usedWordsLezen = [];
-let selectedPakkettenLezen = [];
-let wordDisplayDurationLezen = 2000;
-let blankDisplayDurationLezen = 500;
-let wordCountLezen = 10;
-let flashingPausedLezen = false;
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('groupSelect').addEventListener('change', loadPakkettenLezen);
+    loadPakkettenLezen();
+});
 
-function startReading() {
-    // Haal de instellingen op
-    wordDisplayDurationLezen = parseInt(document.getElementById('readingSpeed').value);
-    wordCountLezen = parseInt(document.getElementById('readingWordCount').value);
-
-    // Reset de gebruikte woordenlijst en toon de resultatenknop niet
-    usedWordsLezen = [];
-    document.getElementById('resultDisplay').innerHTML = '';
-    document.getElementById('closeButton').style.display = 'none';
-    document.getElementById('returnButton').style.display = 'none';
-
-    // Verberg de bedieningspanelen en toon de bedieningsknoppen
-    document.getElementById('readingControls').style.display = 'none';
-    document.getElementById('controlButtons').style.display = 'block';
-
-    // Begin met woorden flitsen
-    flashReadingWord();
-}
-
-function flashReadingWord() {
-    if (usedWordsLezen.length >= wordCountLezen || usedWordsLezen.length >= wordsLezen.length) {
-        showResults();
+function loadPakkettenLezen() {
+    const group = document.getElementById('groupSelect').value;
+    const lezenSelectie = document.getElementById('pakketSelectieLezen');
+    
+    lezenSelectie.innerHTML = '';
+    
+    if (!woordpakketten[group]) {
         return;
     }
 
-    let word;
-    do {
-        word = wordsLezen[Math.floor(Math.random() * wordsLezen.length)];
-    } while (usedWordsLezen.includes(word));
+    const pakketten = woordpakketten[group];
 
-    usedWordsLezen.push(word);
-    document.getElementById('wordDisplay').innerText = word;
-
-    flashingTimeoutLezen = setTimeout(() => {
-        document.getElementById('wordDisplay').innerText = '';
-        if (!flashingPausedLezen) {
-            flashReadingWord();
-        }
-    }, wordDisplayDurationLezen);
-}
-
-function showResults() {
-    const resultDisplay = document.getElementById('resultDisplay');
-    resultDisplay.innerHTML = ''; // Clear previous results
-    usedWordsLezen.forEach(word => {
-        const wordElement = document.createElement('div');
-        wordElement.innerText = word;
-        resultDisplay.appendChild(wordElement);
-    });
-    document.getElementById('closeButton').style.display = 'inline';
-    document.getElementById('returnButton').style.display = 'inline';
-    document.getElementById('controlButtons').style.display = 'none';
-}
-
-function pauseFlashing() {
-    if (flashingPausedLezen) {
-        flashingPausedLezen = false;
-        flashReadingWord();
-    } else {
-        flashingPausedLezen = true;
-        clearTimeout(flashingTimeoutLezen);
+    for (const [pakket, woorden] of Object.entries(pakketten)) {
+        let pakketElementLezen = document.createElement('div');
+        pakketElementLezen.className = 'pakket-element';
+        pakketElementLezen.innerHTML = `
+            <div class="pakket-title">${pakket}</div>
+            <div class="pakket-buttons">
+                <button class="edit-button">Bewerken</button>
+                <button class="delete-button">Verwijderen</button>
+            </div>
+        `;
+        pakketElementLezen.querySelector('.pakket-title').onclick = () => selectPakketLezen(woorden, pakket);
+        pakketElementLezen.querySelector('.edit-button').onclick = (e) => {
+            e.stopPropagation();
+            editPakketLezen(pakket, group);
+        };
+        pakketElementLezen.querySelector('.delete-button').onclick = (e) => {
+            e.stopPropagation();
+            deletePakketLezen(pakket, group);
+        };
+        lezenSelectie.appendChild(pakketElementLezen);
     }
 }
 
-function stopFlashing() {
-    clearTimeout(flashingTimeoutLezen);
-    document.getElementById('wordDisplay').innerText = '';
-    showResults();
-}
-
 function selectPakketLezen(woorden, pakket) {
+    const group = document.getElementById('groupSelect').value;
     const index = selectedPakkettenLezen.indexOf(pakket);
     if (index === -1) {
-        wordsLezen = [...wordsLezen, ...woorden];
+        wordsLezen.push(...woorden);
         selectedPakkettenLezen.push(pakket);
     } else {
         wordsLezen = wordsLezen.filter(word => !woorden.includes(word));
@@ -88,12 +51,21 @@ function selectPakketLezen(woorden, pakket) {
     document.getElementById('selectedPakketLezen').innerText = `Geselecteerde pakketten: ${selectedPakkettenLezen.join(', ')}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const lezenSelectie = document.getElementById('pakketSelectieLezen');
-    for (const [pakket, woorden] of Object.entries(woordpakketten)) {
-        let pakketElement = document.createElement('div');
-        pakketElement.innerText = pakket;
-        pakketElement.onclick = () => selectPakketLezen(woorden, pakket);
-        lezenSelectie.appendChild(pakketElement);
+function editPakketLezen(pakket, group) {
+    const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[group][pakket].join(', '));
+    if (newWords !== null) {
+        woordpakketten[group][pakket] = newWords.split(',').map(word => word.trim());
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakkettenLezen();
+        alert(`Pakket "${pakket}" succesvol bewerkt.`);
     }
-});
+}
+
+function deletePakketLezen(pakket, group) {
+    if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
+        delete woordpakketten[group][pakket];
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakkettenLezen();
+        alert(`Pakket "${pakket}" succesvol verwijderd.`);
+    }
+}
