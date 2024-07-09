@@ -8,6 +8,7 @@ if (localStorage.getItem('woordpakketten')) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('groupSelect').addEventListener('change', loadPakketten);
     loadPakketten();
 });
 
@@ -20,6 +21,10 @@ function loadPakketten() {
     spellingSelectie.innerHTML = '';
     lezenSelectie.innerHTML = '';
     
+    if (!woordpakketten[group]) {
+        return;
+    }
+
     const pakketten = woordpakketten[group];
 
     for (const [pakket, woorden] of Object.entries(pakketten)) {
@@ -100,12 +105,14 @@ function selectPakket(woorden, pakket, type) {
 function showControls(subject) {
     document.getElementById('subjectMenu').style.display = 'none';
     document.getElementById('backToMenuButton').style.display = 'block';
+    document.getElementById('controls').style.display = 'none';
+    document.getElementById('readingControls').style.display = 'none';
+    
     if (subject === 'spelling') {
         document.getElementById('controls').style.display = 'block';
     } else if (subject === 'lezen') {
         document.getElementById('readingControls').style.display = 'block';
     }
-    // Hier kunnen we extra logica toevoegen voor andere vakken zoals taal en rekenen
 }
 
 function closeResults() {
@@ -139,4 +146,45 @@ function addNewPakket(type) {
     const newPakketName = newPakketNameInput.value.trim();
     const newPakketWords = newPakketWordsInput.value.split(',').map(word => word.trim());
     
-    if
+    if (newPakketName === '' || newPakketWords.length === 0 || newPakketWords[0] === '') {
+        alert('Voer een geldige naam en enkele woorden in.');
+        return;
+    }
+
+    if (woordpakketten[group][newPakketName]) {
+        alert('Pakketnaam bestaat al. Kies een andere naam.');
+        return;
+    }
+    
+    woordpakketten[group][newPakketName] = newPakketWords;
+    
+    // Opslaan in localStorage
+    localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+    
+    // Herlaad de pakketten om de nieuwe toe te voegen
+    loadPakketten();
+    
+    // Maak de invoervelden leeg
+    newPakketNameInput.value = '';
+    newPakketWordsInput.value = '';
+    alert('Nieuw pakket succesvol toegevoegd.');
+}
+
+function editPakket(pakket, group) {
+    const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[group][pakket].join(', '));
+    if (newWords !== null) {
+        woordpakketten[group][pakket] = newWords.split(',').map(word => word.trim());
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakketten();
+        alert(`Pakket "${pakket}" succesvol bewerkt.`);
+    }
+}
+
+function deletePakket(pakket, group) {
+    if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
+        delete woordpakketten[group][pakket];
+        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
+        loadPakketten();
+        alert(`Pakket "${pakket}" succesvol verwijderd.`);
+    }
+}
