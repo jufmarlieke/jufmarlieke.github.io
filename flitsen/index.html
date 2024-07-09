@@ -20,6 +20,16 @@
     </div>
     <div id="controls" style="display: none;">
         <div class="form-group">
+            <label for="groupSelect">Kies Groep:</label>
+            <select id="groupSelect" onchange="loadPakketten()">
+                <option value="groep4">Groep 4</option>
+                <option value="groep5">Groep 5</option>
+                <option value="groep6">Groep 6</option>
+                <option value="groep7">Groep 7</option>
+                <option value="groep8">Groep 8</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="duration">Duur per woord (seconden):</label>
             <select id="duration">
                 <option value="2000">2</option>

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadPakketten() {
+    const group = document.getElementById('groupSelect').value;
     const spellingSelectie = document.getElementById('pakketSelectieSpelling');
     const lezenSelectie = document.getElementById('pakketSelectieLezen');
     
@@ -19,7 +20,9 @@ function loadPakketten() {
     spellingSelectie.innerHTML = '';
     lezenSelectie.innerHTML = '';
     
-    for (const [pakket, woorden] of Object.entries(woordpakketten)) {
+    const pakketten = woordpakketten[group];
+
+    for (const [pakket, woorden] of Object.entries(pakketten)) {
         let pakketElementSpelling = document.createElement('div');
         pakketElementSpelling.className = 'pakket-element';
         pakketElementSpelling.innerHTML = `
@@ -32,11 +35,11 @@ function loadPakketten() {
         pakketElementSpelling.querySelector('.pakket-title').onclick = () => selectPakket(woorden, pakket, 'spelling');
         pakketElementSpelling.querySelector('.edit-button').onclick = (e) => {
             e.stopPropagation();
-            editPakket(pakket);
+            editPakket(pakket, group);
         };
         pakketElementSpelling.querySelector('.delete-button').onclick = (e) => {
             e.stopPropagation();
-            deletePakket(pakket);
+            deletePakket(pakket, group);
         };
         spellingSelectie.appendChild(pakketElementSpelling);
 
@@ -52,17 +55,18 @@ function loadPakketten() {
         pakketElementLezen.querySelector('.pakket-title').onclick = () => selectPakket(woorden, pakket, 'lezen');
         pakketElementLezen.querySelector('.edit-button').onclick = (e) => {
             e.stopPropagation();
-            editPakket(pakket);
+            editPakket(pakket, group);
         };
         pakketElementLezen.querySelector('.delete-button').onclick = (e) => {
             e.stopPropagation();
-            deletePakket(pakket);
+            deletePakket(pakket, group);
         };
         lezenSelectie.appendChild(pakketElementLezen);
     }
 }
 
 function selectPakket(woorden, pakket, type) {
+    const group = document.getElementById('groupSelect').value;
     let wordsArray, selectedPakkettenArray, elementId;
     if (type === 'spelling') {
         wordsArray = wordsSpelling;
@@ -129,50 +133,10 @@ function returnToMenu() {
 }
 
 function addNewPakket(type) {
+    const group = document.getElementById('groupSelect').value;
     const newPakketNameInput = type === 'spelling' ? document.getElementById('newPakketName') : document.getElementById('newPakketNameLezen');
     const newPakketWordsInput = type === 'spelling' ? document.getElementById('newPakketWords') : document.getElementById('newPakketWordsLezen');
     const newPakketName = newPakketNameInput.value.trim();
     const newPakketWords = newPakketWordsInput.value.split(',').map(word => word.trim());
     
-    if (newPakketName === '' || newPakketWords.length === 0 || newPakketWords[0] === '') {
-        alert('Voer een geldige naam en enkele woorden in.');
-        return;
-    }
-
-    if (woordpakketten[newPakketName]) {
-        alert('Pakketnaam bestaat al. Kies een andere naam.');
-        return;
-    }
-    
-    woordpakketten[newPakketName] = newPakketWords;
-    
-    // Opslaan in localStorage
-    localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-    
-    // Herlaad de pakketten om de nieuwe toe te voegen
-    loadPakketten();
-    
-    // Maak de invoervelden leeg
-    newPakketNameInput.value = '';
-    newPakketWordsInput.value = '';
-    alert('Nieuw pakket succesvol toegevoegd.');
-}
-
-function editPakket(pakket) {
-    const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[pakket].join(', '));
-    if (newWords !== null) {
-        woordpakketten[pakket] = newWords.split(',').map(word => word.trim());
-        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakketten();
-        alert(`Pakket "${pakket}" succesvol bewerkt.`);
-    }
-}
-
-function deletePakket(pakket) {
-    if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
-        delete woordpakketten[pakket];
-        localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakketten();
-        alert(`Pakket "${pakket}" succesvol verwijderd.`);
-    }
-}
+    if
