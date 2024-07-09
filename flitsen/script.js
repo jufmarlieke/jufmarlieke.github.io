@@ -1,5 +1,9 @@
 let flashingTimeoutSpelling;
 let flashingTimeoutLezen;
+let wordsSpelling = [];
+let wordsLezen = [];
+let selectedPakkettenSpelling = [];
+let selectedPakkettenLezen = [];
 
 // Laad woordpakketten uit localStorage als die bestaan
 if (localStorage.getItem('woordpakketten')) {
