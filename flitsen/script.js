@@ -21,27 +21,53 @@ function loadPakketten() {
     
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
         let pakketElementSpelling = document.createElement('div');
+        pakketElementSpelling.className = 'pakket-element';
         pakketElementSpelling.innerText = pakket;
         pakketElementSpelling.onclick = () => selectPakket(woorden, pakket, 'spelling');
         spellingSelectie.appendChild(pakketElementSpelling);
 
         let pakketElementLezen = document.createElement('div');
+        pakketElementLezen.className = 'pakket-element';
         pakketElementLezen.innerText = pakket;
         pakketElementLezen.onclick = () => selectPakket(woorden, pakket, 'lezen');
         lezenSelectie.appendChild(pakketElementLezen);
 
         // Voeg bewerk- en verwijderknoppen toe
-        let editButton = document.createElement('button');
-        editButton.innerText = 'Bewerken';
-        editButton.onclick = () => editPakket(pakket);
-        pakketElementSpelling.appendChild(editButton);
-        pakketElementLezen.appendChild(editButton);
+        let editButtonSpelling = document.createElement('button');
+        editButtonSpelling.className = 'edit-button';
+        editButtonSpelling.innerText = 'Bewerken';
+        editButtonSpelling.onclick = (e) => {
+            e.stopPropagation();
+            editPakket(pakket);
+        };
+        pakketElementSpelling.appendChild(editButtonSpelling);
 
-        let deleteButton = document.createElement('button');
-        deleteButton.innerText = 'Verwijderen';
-        deleteButton.onclick = () => deletePakket(pakket);
-        pakketElementSpelling.appendChild(deleteButton);
-        pakketElementLezen.appendChild(deleteButton);
+        let deleteButtonSpelling = document.createElement('button');
+        deleteButtonSpelling.className = 'delete-button';
+        deleteButtonSpelling.innerText = 'Verwijderen';
+        deleteButtonSpelling.onclick = (e) => {
+            e.stopPropagation();
+            deletePakket(pakket);
+        };
+        pakketElementSpelling.appendChild(deleteButtonSpelling);
+
+        let editButtonLezen = document.createElement('button');
+        editButtonLezen.className = 'edit-button';
+        editButtonLezen.innerText = 'Bewerken';
+        editButtonLezen.onclick = (e) => {
+            e.stopPropagation();
+            editPakket(pakket);
+        };
+        pakketElementLezen.appendChild(editButtonLezen);
+
+        let deleteButtonLezen = document.createElement('button');
+        deleteButtonLezen.className = 'delete-button';
+        deleteButtonLezen.innerText = 'Verwijderen';
+        deleteButtonLezen.onclick = (e) => {
+            e.stopPropagation();
+            deletePakket(pakket);
+        };
+        pakketElementLezen.appendChild(deleteButtonLezen);
     }
 }
 
