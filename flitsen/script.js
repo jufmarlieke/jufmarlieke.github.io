@@ -22,52 +22,43 @@ function loadPakketten() {
     for (const [pakket, woorden] of Object.entries(woordpakketten)) {
         let pakketElementSpelling = document.createElement('div');
         pakketElementSpelling.className = 'pakket-element';
-        pakketElementSpelling.innerText = pakket;
-        pakketElementSpelling.onclick = () => selectPakket(woorden, pakket, 'spelling');
+        pakketElementSpelling.innerHTML = `
+            <div class="pakket-title">${pakket}</div>
+            <div class="pakket-buttons">
+                <button class="edit-button">Bewerken</button>
+                <button class="delete-button">Verwijderen</button>
+            </div>
+        `;
+        pakketElementSpelling.querySelector('.pakket-title').onclick = () => selectPakket(woorden, pakket, 'spelling');
+        pakketElementSpelling.querySelector('.edit-button').onclick = (e) => {
+            e.stopPropagation();
+            editPakket(pakket);
+        };
+        pakketElementSpelling.querySelector('.delete-button').onclick = (e) => {
+            e.stopPropagation();
+            deletePakket(pakket);
+        };
         spellingSelectie.appendChild(pakketElementSpelling);
 
         let pakketElementLezen = document.createElement('div');
         pakketElementLezen.className = 'pakket-element';
-        pakketElementLezen.innerText = pakket;
-        pakketElementLezen.onclick = () => selectPakket(woorden, pakket, 'lezen');
+        pakketElementLezen.innerHTML = `
+            <div class="pakket-title">${pakket}</div>
+            <div class="pakket-buttons">
+                <button class="edit-button">Bewerken</button>
+                <button class="delete-button">Verwijderen</button>
+            </div>
+        `;
+        pakketElementLezen.querySelector('.pakket-title').onclick = () => selectPakket(woorden, pakket, 'lezen');
+        pakketElementLezen.querySelector('.edit-button').onclick = (e) => {
+            e.stopPropagation();
+            editPakket(pakket);
+        };
+        pakketElementLezen.querySelector('.delete-button').onclick = (e) => {
+            e.stopPropagation();
+            deletePakket(pakket);
+        };
         lezenSelectie.appendChild(pakketElementLezen);
-
-        // Voeg bewerk- en verwijderknoppen toe
-        let editButtonSpelling = document.createElement('button');
-        editButtonSpelling.className = 'edit-button';
-        editButtonSpelling.innerText = 'Bewerken';
-        editButtonSpelling.onclick = (e) => {
-            e.stopPropagation();
-            editPakket(pakket);
-        };
-        pakketElementSpelling.appendChild(editButtonSpelling);
-
-        let deleteButtonSpelling = document.createElement('button');
-        deleteButtonSpelling.className = 'delete-button';
-        deleteButtonSpelling.innerText = 'Verwijderen';
-        deleteButtonSpelling.onclick = (e) => {
-            e.stopPropagation();
-            deletePakket(pakket);
-        };
-        pakketElementSpelling.appendChild(deleteButtonSpelling);
-
-        let editButtonLezen = document.createElement('button');
-        editButtonLezen.className = 'edit-button';
-        editButtonLezen.innerText = 'Bewerken';
-        editButtonLezen.onclick = (e) => {
-            e.stopPropagation();
-            editPakket(pakket);
-        };
-        pakketElementLezen.appendChild(editButtonLezen);
-
-        let deleteButtonLezen = document.createElement('button');
-        deleteButtonLezen.className = 'delete-button';
-        deleteButtonLezen.innerText = 'Verwijderen';
-        deleteButtonLezen.onclick = (e) => {
-            e.stopPropagation();
-            deletePakket(pakket);
-        };
-        pakketElementLezen.appendChild(deleteButtonLezen);
     }
 }
 
