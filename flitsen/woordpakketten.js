@@ -68,7 +68,4 @@ const woordpakketten = {
          "het ontbijt", 
          "het schilderij", 
         },
-    
-    groep7:
-        
 };
