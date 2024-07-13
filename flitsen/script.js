@@ -219,6 +219,12 @@ function startFlashing(type) {
         elementId = 'wordDisplay';
     }
 
+    // Verberg keuzemenu's en toon woordDisplay
+    document.getElementById('controls').style.display = 'none';
+    document.getElementById('readingControls').style.display = 'none';
+    document.getElementById('wordDisplay').style.display = 'block';
+    document.getElementById('resultDisplay').style.display = 'none';
+
     let words = wordsArray.slice(0, wordCount);
     let currentIndex = 0;
 
