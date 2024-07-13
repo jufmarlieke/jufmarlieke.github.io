@@ -4,6 +4,8 @@ let wordsSpelling = [];
 let wordsLezen = [];
 let selectedPakkettenSpelling = [];
 let selectedPakkettenLezen = [];
+let isPaused = false;
+let pausedIndex = 0;
 
 // Laad woordpakketten uit localStorage als die bestaan
 if (localStorage.getItem('woordpakketten')) {
@@ -228,8 +230,14 @@ function startFlashing(type) {
 
     let words = wordsArray.slice(0, wordCount);
     let currentIndex = 0;
+    isPaused = false;
 
     function flashWord() {
+        if (isPaused) {
+            pausedIndex = currentIndex;
+            return;
+        }
+
         if (currentIndex < words.length) {
             document.getElementById(elementId).innerText = words[currentIndex];
             currentIndex++;
@@ -266,6 +274,71 @@ function startFlashingSpelling() {
 
 function startFlashingLezen() {
     startFlashing('lezen');
+}
+
+function pauseFlashing() {
+    isPaused = !isPaused;
+    if (!isPaused) {
+        if (pausedIndex > 0) {
+            startFlashingFromIndex(pausedIndex);
+        }
+    }
+}
+
+function startFlashingFromIndex(index) {
+    let type = document.getElementById('readingControls').style.display === 'block' ? 'lezen' : 'spelling';
+    let wordsArray = type === 'spelling' ? wordsSpelling : wordsLezen;
+    let duration = type === 'spelling' ? parseInt(document.getElementById('duration').value, 10) : parseInt(document.getElementById('readingSpeed').value, 10);
+    let blankDuration = type === 'spelling' ? parseInt(document.getElementById('blankDuration').value, 10) : 1000;
+    let wordCount = type === 'spelling' ? parseInt(document.getElementById('wordCount').value, 10) : parseInt(document.getElementById('readingWordCount').value, 10);
+    let elementId = 'wordDisplay';
+
+    let words = wordsArray.slice(0, wordCount);
+    let currentIndex = index;
+    isPaused = false;
+
+    function flashWord() {
+        if (isPaused) {
+            pausedIndex = currentIndex;
+            return;
+        }
+
+        if (currentIndex < words.length) {
+            document.getElementById(elementId).innerText = words[currentIndex];
+            currentIndex++;
+            let flashingTimeout = setTimeout(() => {
+                document.getElementById(elementId).innerText = '';
+                flashingTimeout = setTimeout(flashWord, blankDuration);
+            }, duration);
+
+            if (type === 'spelling') {
+                flashingTimeoutSpelling = flashingTimeout;
+            } else {
+                flashingTimeoutLezen = flashingTimeout;
+            }
+        } else {
+            if (type === 'spelling') {
+                clearTimeout(flashingTimeoutSpelling);
+            } else {
+                clearTimeout(flashingTimeoutLezen);
+            }
+            showResults();
+            document.getElementById('controlButtons').style.display = 'none';
+            document.getElementById('returnButton').style.display = 'block';
+        }
+    }
+
+    flashWord();
+    document.getElementById('controlButtons').style.display = 'block';
+    document.getElementById('returnButton').style.display = 'none';
+}
+
+function stopFlashing() {
+    clearTimeout(flashingTimeoutSpelling);
+    clearTimeout(flashingTimeoutLezen);
+    showResults();
+    document.getElementById('controlButtons').style.display = 'none';
+    document.getElementById('returnButton').style.display = 'block';
 }
 
 document.querySelector('#controls button[onclick="startFlashingSpelling()"]').onclick = startFlashingSpelling;
