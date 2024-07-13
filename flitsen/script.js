@@ -192,3 +192,41 @@ function deletePakket(pakket, group) {
         alert(`Pakket "${pakket}" succesvol verwijderd.`);
     }
 }
+function startFlashing() {
+    // Start het flitsen van woorden
+    if (selectedPakkettenSpelling.length === 0) {
+        alert("Selecteer ten minste één woordpakket.");
+        return;
+    }
+
+    let duration = parseInt(document.getElementById('duration').value, 10);
+    let blankDuration = parseInt(document.getElementById('blankDuration').value, 10);
+    let wordCount = parseInt(document.getElementById('wordCount').value, 10);
+
+    let words = wordsSpelling.slice(0, wordCount);
+
+    let currentIndex = 0;
+
+    function flashWord() {
+        if (currentIndex < words.length) {
+            document.getElementById('wordDisplay').innerText = words[currentIndex];
+            currentIndex++;
+            flashingTimeoutSpelling = setTimeout(() => {
+                document.getElementById('wordDisplay').innerText = '';
+                flashingTimeoutSpelling = setTimeout(flashWord, blankDuration);
+            }, duration);
+        } else {
+            clearTimeout(flashingTimeoutSpelling);
+            document.getElementById('wordDisplay').innerText = 'Klaar!';
+            document.getElementById('controlButtons').style.display = 'none';
+            document.getElementById('returnButton').style.display = 'block';
+        }
+    }
+
+    flashWord();
+    document.getElementById('controlButtons').style.display = 'block';
+    document.getElementById('returnButton').style.display = 'none';
+}
+
+document.querySelector('#controls button[onclick="startFlashing()"]').onclick = startFlashing;
+
