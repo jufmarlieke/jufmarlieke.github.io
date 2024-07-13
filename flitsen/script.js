@@ -192,6 +192,7 @@ function deletePakket(pakket, group) {
         alert(`Pakket "${pakket}" succesvol verwijderd.`);
     }
 }
+
 function startFlashing() {
     // Start het flitsen van woorden
     if (selectedPakkettenSpelling.length === 0) {
@@ -229,4 +230,3 @@ function startFlashing() {
 }
 
 document.querySelector('#controls button[onclick="startFlashing()"]').onclick = startFlashing;
-
