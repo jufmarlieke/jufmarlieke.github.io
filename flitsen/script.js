@@ -123,9 +123,11 @@ function closeResults() {
     document.getElementById('resultDisplay').innerText = '';
     document.getElementById('closeButton').style.display = 'none';
     document.getElementById('returnButton').style.display = 'none';
+    document.getElementById('controlButtons').style.display = 'none';
+    document.getElementById('wordDisplay').innerText = '';
+    document.getElementById('subjectMenu').style.display = 'block';
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
-    document.getElementById('subjectMenu').style.display = 'block';
     document.getElementById('backToMenuButton').style.display = 'none';
 }
 
@@ -193,32 +195,54 @@ function deletePakket(pakket, group) {
     }
 }
 
-function startFlashing() {
-    // Start het flitsen van woorden
-    if (selectedPakkettenSpelling.length === 0) {
-        alert("Selecteer ten minste één woordpakket.");
-        return;
+function startFlashing(type) {
+    let wordsArray, duration, blankDuration, wordCount, elementId;
+    if (type === 'spelling') {
+        if (selectedPakkettenSpelling.length === 0) {
+            alert("Selecteer ten minste één woordpakket.");
+            return;
+        }
+        wordsArray = wordsSpelling;
+        duration = parseInt(document.getElementById('duration').value, 10);
+        blankDuration = parseInt(document.getElementById('blankDuration').value, 10);
+        wordCount = parseInt(document.getElementById('wordCount').value, 10);
+        elementId = 'wordDisplay';
+    } else {
+        if (selectedPakkettenLezen.length === 0) {
+            alert("Selecteer ten minste één woordpakket.");
+            return;
+        }
+        wordsArray = wordsLezen;
+        duration = parseInt(document.getElementById('readingSpeed').value, 10);
+        wordCount = parseInt(document.getElementById('readingWordCount').value, 10);
+        blankDuration = 1000; // Vast blanco duur voor lezen
+        elementId = 'wordDisplay';
     }
 
-    let duration = parseInt(document.getElementById('duration').value, 10);
-    let blankDuration = parseInt(document.getElementById('blankDuration').value, 10);
-    let wordCount = parseInt(document.getElementById('wordCount').value, 10);
-
-    let words = wordsSpelling.slice(0, wordCount);
-
+    let words = wordsArray.slice(0, wordCount);
     let currentIndex = 0;
 
     function flashWord() {
         if (currentIndex < words.length) {
-            document.getElementById('wordDisplay').innerText = words[currentIndex];
+            document.getElementById(elementId).innerText = words[currentIndex];
             currentIndex++;
-            flashingTimeoutSpelling = setTimeout(() => {
-                document.getElementById('wordDisplay').innerText = '';
-                flashingTimeoutSpelling = setTimeout(flashWord, blankDuration);
+            let flashingTimeout = setTimeout(() => {
+                document.getElementById(elementId).innerText = '';
+                flashingTimeout = setTimeout(flashWord, blankDuration);
             }, duration);
+
+            if (type === 'spelling') {
+                flashingTimeoutSpelling = flashingTimeout;
+            } else {
+                flashingTimeoutLezen = flashingTimeout;
+            }
         } else {
-            clearTimeout(flashingTimeoutSpelling);
-            document.getElementById('wordDisplay').innerText = 'Klaar!';
+            if (type === 'spelling') {
+                clearTimeout(flashingTimeoutSpelling);
+            } else {
+                clearTimeout(flashingTimeoutLezen);
+            }
+            document.getElementById(elementId).innerText = 'Klaar!';
             document.getElementById('controlButtons').style.display = 'none';
             document.getElementById('returnButton').style.display = 'block';
         }
@@ -229,4 +253,13 @@ function startFlashing() {
     document.getElementById('returnButton').style.display = 'none';
 }
 
-document.querySelector('#controls button[onclick="startFlashing()"]').onclick = startFlashing;
+function startFlashingSpelling() {
+    startFlashing('spelling');
+}
+
+function startFlashingLezen() {
+    startFlashing('lezen');
+}
+
+document.querySelector('#controls button[onclick="startFlashingSpelling()"]').onclick = startFlashingSpelling;
+document.querySelector('#readingControls button[onclick="startFlashingLezen()"]').onclick = startFlashingLezen;
