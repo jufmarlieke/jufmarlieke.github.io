@@ -7,7 +7,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center content vertically */
+    justify-content: center;
     height: 100vh;
 }
 
@@ -23,7 +23,7 @@ h1 {
     display: inline-block;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-bottom: 20px;
-    width: 300px; /* Uniforme breedte voor alle elementen */
+    width: 300px;
 }
 
 #controls label, #subjectMenu label, #readingControls label {
@@ -39,8 +39,8 @@ h1 {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    width: 100%; /* Volledige breedte */
-    box-sizing: border-box; /* Zodat padding wordt meegerekend in de breedte */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #controls button, #subjectMenu button, #readingControls button {
@@ -56,23 +56,25 @@ h1 {
 
 #wordDisplay {
     font-size: 72px;
-    display: none; /* Initially hidden */
+    display: none;
     justify-content: center;
     align-items: center;
     height: 60vh;
+    width: 100%; /* Voegt breedte toe om de text in het midden te plaatsen */
+    display: flex;
 }
 
 #resultDisplay {
     font-size: 2em;
     text-align: center;
-    display: none; /* Initially hidden */
+    display: none;
     margin-top: 20px;
     height: 20vh;
     overflow-y: auto;
     width: 80%;
 }
 
-#controlButtons, #closeButton, #returnButton, #backToMenuButton {
+#controlButtons, #closeButton, #backToMenuButton {
     display: none;
 }
 
@@ -82,7 +84,7 @@ h1 {
     left: 20px;
 }
 
-#controlButtons button, #closeButton, #returnButton, #backToMenuButton {
+#controlButtons button, #closeButton, #backToMenuButton {
     padding: 10px 20px;
     background-color: #1E90FF;
     color: white;
@@ -93,7 +95,7 @@ h1 {
     margin-left: 10px;
 }
 
-#controlButtons button:hover, #closeButton:hover, #returnButton:hover, #backToMenuButton:hover {
+#controlButtons button:hover, #closeButton:hover, #backToMenuButton:hover {
     background-color: #166ab1;
 }
 
@@ -104,7 +106,6 @@ h1 {
     right: 20px;
 }
 
-/* Dropdown Button */
 .dropbtn {
     background-color: #1E90FF;
     color: white;
@@ -116,14 +117,12 @@ h1 {
     border-radius: 5px;
 }
 
-/* The container <div> - needed to position the dropdown content */
 .dropdown {
     position: relative;
     display: inline-block;
     width: 100%;
 }
 
-/* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -135,27 +134,23 @@ h1 {
     padding: 10px;
 }
 
-/* Show the dropdown menu on hover or focus */
 .dropdown:hover .dropdown-content,
 .dropdown-content:hover {
     display: block;
 }
 
-/* Style the file input */
 .dropdown-content input[type="file"] {
     display: block;
     margin: 5px 0;
     cursor: pointer;
 }
 
-/* Style for selected pakket */
 .selected-pakket {
     font-size: 1em;
     color: #000;
     margin-bottom: 10px;
 }
 
-/* Nieuwe stijlen voor bewerken en verwijderen knoppen */
 .pakket-element {
     position: relative;
     display: flex;

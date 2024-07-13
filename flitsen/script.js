@@ -5,9 +5,9 @@ let wordsLezen = [];
 let selectedPakkettenSpelling = [];
 let selectedPakkettenLezen = [];
 let isPaused = false;
-let pausedIndex = 0;
+let currentIndex = 0;
+let currentType = '';
 
-// Laad woordpakketten uit localStorage als die bestaan
 if (localStorage.getItem('woordpakketten')) {
     const savedPakketten = JSON.parse(localStorage.getItem('woordpakketten'));
     Object.assign(woordpakketten, savedPakketten);
@@ -22,11 +22,10 @@ function loadPakketten() {
     const group = document.getElementById('groupSelect').value;
     const spellingSelectie = document.getElementById('pakketSelectieSpelling');
     const lezenSelectie = document.getElementById('pakketSelectieLezen');
-    
-    // Leeg de huidige lijst
+
     spellingSelectie.innerHTML = '';
     lezenSelectie.innerHTML = '';
-    
+
     if (!woordpakketten[group]) {
         return;
     }
@@ -113,7 +112,7 @@ function showControls(subject) {
     document.getElementById('backToMenuButton').style.display = 'block';
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
-    
+
     if (subject === 'spelling') {
         document.getElementById('controls').style.display = 'block';
     } else if (subject === 'lezen') {
@@ -125,7 +124,6 @@ function closeResults() {
     document.getElementById('resultDisplay').innerText = '';
     document.getElementById('resultDisplay').style.display = 'none';
     document.getElementById('closeButton').style.display = 'none';
-    document.getElementById('returnButton').style.display = 'none';
     document.getElementById('controlButtons').style.display = 'none';
     document.getElementById('wordDisplay').innerText = '';
     document.getElementById('wordDisplay').style.display = 'none';
@@ -138,13 +136,13 @@ function closeResults() {
 function returnToMenu() {
     clearTimeout(flashingTimeoutSpelling);
     clearTimeout(flashingTimeoutLezen);
-    showResults(); // Show results when returning to menu
+    showResults();
     closeResults();
 }
 
 function showResults() {
     const resultDisplay = document.getElementById('resultDisplay');
-    resultDisplay.innerText = wordsSpelling.join(', ') + '\n' + wordsLezen.join(', ');
+    resultDisplay.innerText = (currentType === 'spelling' ? wordsSpelling : wordsLezen).slice(0, currentIndex).join(', ');
     resultDisplay.style.display = 'block';
 }
 
@@ -154,7 +152,7 @@ function addNewPakket(type) {
     const newPakketWordsInput = type === 'spelling' ? document.getElementById('newPakketWords') : document.getElementById('newPakketWordsLezen');
     const newPakketName = newPakketNameInput.value.trim();
     const newPakketWords = newPakketWordsInput.value.split(',').map(word => word.trim());
-    
+
     if (newPakketName === '' || newPakketWords.length === 0 || newPakketWords[0] === '') {
         alert('Voer een geldige naam en enkele woorden in.');
         return;
@@ -164,16 +162,13 @@ function addNewPakket(type) {
         alert('Pakketnaam bestaat al. Kies een andere naam.');
         return;
     }
-    
+
     woordpakketten[group][newPakketName] = newPakketWords;
-    
-    // Opslaan in localStorage
+
     localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-    
-    // Herlaad de pakketten om de nieuwe toe te voegen
+
     loadPakketten();
-    
-    // Maak de invoervelden leeg
+
     newPakketNameInput.value = '';
     newPakketWordsInput.value = '';
     alert('Nieuw pakket succesvol toegevoegd.');
@@ -200,6 +195,8 @@ function deletePakket(pakket, group) {
 
 function startFlashing(type) {
     let wordsArray, duration, blankDuration, wordCount, elementId;
+    currentType = type;
+
     if (type === 'spelling') {
         if (selectedPakkettenSpelling.length === 0) {
             alert("Selecteer ten minste één woordpakket.");
@@ -218,25 +215,21 @@ function startFlashing(type) {
         wordsArray = wordsLezen;
         duration = parseInt(document.getElementById('readingSpeed').value, 10);
         wordCount = parseInt(document.getElementById('readingWordCount').value, 10);
-        blankDuration = 1000; // Vast blanco duur voor lezen
+        blankDuration = 1000;
         elementId = 'wordDisplay';
     }
 
-    // Verberg keuzemenu's en toon woordDisplay
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
     document.getElementById('wordDisplay').style.display = 'flex';
     document.getElementById('resultDisplay').style.display = 'none';
 
     let words = wordsArray.slice(0, wordCount);
-    let currentIndex = 0;
+    currentIndex = 0;
     isPaused = false;
 
     function flashWord() {
-        if (isPaused) {
-            pausedIndex = currentIndex;
-            return;
-        }
+        if (isPaused) return;
 
         if (currentIndex < words.length) {
             document.getElementById(elementId).innerText = words[currentIndex];
@@ -259,13 +252,11 @@ function startFlashing(type) {
             }
             showResults();
             document.getElementById('controlButtons').style.display = 'none';
-            document.getElementById('returnButton').style.display = 'block';
         }
     }
 
     flashWord();
     document.getElementById('controlButtons').style.display = 'block';
-    document.getElementById('returnButton').style.display = 'none';
 }
 
 function startFlashingSpelling() {
@@ -279,29 +270,36 @@ function startFlashingLezen() {
 function pauseFlashing() {
     isPaused = !isPaused;
     if (!isPaused) {
-        if (pausedIndex > 0) {
-            startFlashingFromIndex(pausedIndex);
+        if (currentType === 'spelling') {
+            startFlashingFromIndex('spelling', currentIndex);
+        } else {
+            startFlashingFromIndex('lezen', currentIndex);
         }
     }
 }
 
-function startFlashingFromIndex(index) {
-    let type = document.getElementById('readingControls').style.display === 'block' ? 'lezen' : 'spelling';
-    let wordsArray = type === 'spelling' ? wordsSpelling : wordsLezen;
-    let duration = type === 'spelling' ? parseInt(document.getElementById('duration').value, 10) : parseInt(document.getElementById('readingSpeed').value, 10);
-    let blankDuration = type === 'spelling' ? parseInt(document.getElementById('blankDuration').value, 10) : 1000;
-    let wordCount = type === 'spelling' ? parseInt(document.getElementById('wordCount').value, 10) : parseInt(document.getElementById('readingWordCount').value, 10);
-    let elementId = 'wordDisplay';
+function startFlashingFromIndex(type, index) {
+    let wordsArray, duration, blankDuration, wordCount, elementId;
+
+    if (type === 'spelling') {
+        wordsArray = wordsSpelling;
+        duration = parseInt(document.getElementById('duration').value, 10);
+        blankDuration = parseInt(document.getElementById('blankDuration').value, 10);
+        wordCount = parseInt(document.getElementById('wordCount').value, 10);
+        elementId = 'wordDisplay';
+    } else {
+        wordsArray = wordsLezen;
+        duration = parseInt(document.getElementById('readingSpeed').value, 10);
+        wordCount = parseInt(document.getElementById('readingWordCount').value, 10);
+        blankDuration = 1000;
+        elementId = 'wordDisplay';
+    }
 
     let words = wordsArray.slice(0, wordCount);
-    let currentIndex = index;
-    isPaused = false;
+    currentIndex = index;
 
     function flashWord() {
-        if (isPaused) {
-            pausedIndex = currentIndex;
-            return;
-        }
+        if (isPaused) return;
 
         if (currentIndex < words.length) {
             document.getElementById(elementId).innerText = words[currentIndex];
@@ -324,13 +322,11 @@ function startFlashingFromIndex(index) {
             }
             showResults();
             document.getElementById('controlButtons').style.display = 'none';
-            document.getElementById('returnButton').style.display = 'block';
         }
     }
 
     flashWord();
     document.getElementById('controlButtons').style.display = 'block';
-    document.getElementById('returnButton').style.display = 'none';
 }
 
 function stopFlashing() {
@@ -338,7 +334,6 @@ function stopFlashing() {
     clearTimeout(flashingTimeoutLezen);
     showResults();
     document.getElementById('controlButtons').style.display = 'none';
-    document.getElementById('returnButton').style.display = 'block';
 }
 
 document.querySelector('#controls button[onclick="startFlashingSpelling()"]').onclick = startFlashingSpelling;
