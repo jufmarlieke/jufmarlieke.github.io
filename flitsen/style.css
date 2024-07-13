@@ -7,6 +7,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Center content vertically */
+    height: 100vh;
 }
 
 h1 {
@@ -54,7 +56,7 @@ h1 {
 
 #wordDisplay {
     font-size: 72px;
-    display: flex;
+    display: none; /* Initially hidden */
     justify-content: center;
     align-items: center;
     height: 60vh;
@@ -63,17 +65,11 @@ h1 {
 #resultDisplay {
     font-size: 2em;
     text-align: center;
-    display: inline-block;
+    display: none; /* Initially hidden */
     margin-top: 20px;
     height: 20vh;
     overflow-y: auto;
     width: 80%;
-}
-
-#resultDisplay div {
-    display: inline-block;
-    margin: 5px 10px;
-    padding: 5px;
 }
 
 #controlButtons, #closeButton, #returnButton, #backToMenuButton {

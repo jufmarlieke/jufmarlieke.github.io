@@ -121,10 +121,12 @@ function showControls(subject) {
 
 function closeResults() {
     document.getElementById('resultDisplay').innerText = '';
+    document.getElementById('resultDisplay').style.display = 'none';
     document.getElementById('closeButton').style.display = 'none';
     document.getElementById('returnButton').style.display = 'none';
     document.getElementById('controlButtons').style.display = 'none';
     document.getElementById('wordDisplay').innerText = '';
+    document.getElementById('wordDisplay').style.display = 'none';
     document.getElementById('subjectMenu').style.display = 'block';
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
@@ -134,15 +136,14 @@ function closeResults() {
 function returnToMenu() {
     clearTimeout(flashingTimeoutSpelling);
     clearTimeout(flashingTimeoutLezen);
-    document.getElementById('resultDisplay').innerText = '';
-    document.getElementById('closeButton').style.display = 'none';
-    document.getElementById('returnButton').style.display = 'none';
-    document.getElementById('controlButtons').style.display = 'none';
-    document.getElementById('wordDisplay').innerText = '';
-    document.getElementById('subjectMenu').style.display = 'block';
-    document.getElementById('controls').style.display = 'none';
-    document.getElementById('readingControls').style.display = 'none';
-    document.getElementById('backToMenuButton').style.display = 'none';
+    showResults(); // Show results when returning to menu
+    closeResults();
+}
+
+function showResults() {
+    const resultDisplay = document.getElementById('resultDisplay');
+    resultDisplay.innerText = wordsSpelling.join(', ') + '\n' + wordsLezen.join(', ');
+    resultDisplay.style.display = 'block';
 }
 
 function addNewPakket(type) {
@@ -222,7 +223,7 @@ function startFlashing(type) {
     // Verberg keuzemenu's en toon woordDisplay
     document.getElementById('controls').style.display = 'none';
     document.getElementById('readingControls').style.display = 'none';
-    document.getElementById('wordDisplay').style.display = 'block';
+    document.getElementById('wordDisplay').style.display = 'flex';
     document.getElementById('resultDisplay').style.display = 'none';
 
     let words = wordsArray.slice(0, wordCount);
@@ -248,7 +249,7 @@ function startFlashing(type) {
             } else {
                 clearTimeout(flashingTimeoutLezen);
             }
-            document.getElementById(elementId).innerText = 'Klaar!';
+            showResults();
             document.getElementById('controlButtons').style.display = 'none';
             document.getElementById('returnButton').style.display = 'block';
         }
