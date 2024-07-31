@@ -1,45 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('groupSelect').addEventListener('change', loadPakkettenSpelling);
-    loadPakkettenSpelling();
-});
+import { createElement, createPakketElement, updateSelectedPakketten } from './utils.js';
 
-function loadPakkettenSpelling() {
-    const group = document.getElementById('groupSelect').value;
-    const spellingSelectie = document.getElementById('pakketSelectieSpelling');
-    
-    spellingSelectie.innerHTML = '';
-    
-    if (!woordpakketten[group]) {
-        return;
-    }
+let wordsSpelling = [];
+let selectedPakkettenSpelling = [];
 
-    const pakketten = woordpakketten[group];
-
-    for (const [pakket, woorden] of Object.entries(pakketten)) {
-        let pakketElementSpelling = document.createElement('div');
-        pakketElementSpelling.className = 'pakket-element';
-        pakketElementSpelling.innerHTML = `
-            <div class="pakket-title">${pakket}</div>
-            <div class="pakket-buttons">
-                <button class="edit-button">Bewerken</button>
-                <button class="delete-button">Verwijderen</button>
-            </div>
-        `;
-        pakketElementSpelling.querySelector('.pakket-title').onclick = () => selectPakketSpelling(woorden, pakket);
-        pakketElementSpelling.querySelector('.edit-button').onclick = (e) => {
-            e.stopPropagation();
-            editPakketSpelling(pakket, group);
-        };
-        pakketElementSpelling.querySelector('.delete-button').onclick = (e) => {
-            e.stopPropagation();
-            deletePakketSpelling(pakket, group);
-        };
-        spellingSelectie.appendChild(pakketElementSpelling);
-    }
-}
-
-function selectPakketSpelling(woorden, pakket) {
-    const group = document.getElementById('groupSelect').value;
+function selectPakket(woorden, pakket, type) {
     const index = selectedPakkettenSpelling.indexOf(pakket);
     if (index === -1) {
         wordsSpelling.push(...woorden);
@@ -48,24 +12,60 @@ function selectPakketSpelling(woorden, pakket) {
         wordsSpelling = wordsSpelling.filter(word => !woorden.includes(word));
         selectedPakkettenSpelling.splice(index, 1);
     }
-    document.getElementById('selectedPakketSpelling').innerText = `Geselecteerde pakketten: ${selectedPakkettenSpelling.join(', ')}`;
+
+    updateSelectedPakketten(type, selectedPakkettenSpelling);
 }
 
-function editPakketSpelling(pakket, group) {
+function editPakket(pakket, group, type) {
     const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[group][pakket].join(', '));
     if (newWords !== null) {
         woordpakketten[group][pakket] = newWords.split(',').map(word => word.trim());
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakkettenSpelling();
+        loadPakketten(type);
         alert(`Pakket "${pakket}" succesvol bewerkt.`);
     }
 }
 
-function deletePakketSpelling(pakket, group) {
+function deletePakket(pakket, group, type) {
     if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
         delete woordpakketten[group][pakket];
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakkettenSpelling();
+        loadPakketten(type);
         alert(`Pakket "${pakket}" succesvol verwijderd.`);
     }
 }
+
+function loadPakketten(type) {
+    const group = document.getElementById('groupSelect').value || 'groep4';
+    const selectie = document.getElementById(`pakketSelectie${type}`);
+    
+    selectie.innerHTML = '';
+    
+    if (!woordpakketten[group]) return;
+
+    const pakketten = woordpakketten[group];
+
+    const fragment = document.createDocumentFragment();
+
+    for (const [pakket, woorden] of Object.entries(pakketten)) {
+        const pakketElement = createPakketElement(
+            pakket, 
+            woorden, 
+            type, 
+            group, 
+            (woorden, pakket) => selectPakket(woorden, pakket, type),
+            (pakket, group) => editPakket(pakket, group, type),
+            (pakket, group) => deletePakket(pakket, group, type)
+        );
+        fragment.appendChild(pakketElement);
+    }
+
+    selectie.appendChild(fragment);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('groupSelect').addEventListener('change', () => loadPakketten('Spelling'));
+    loadPakketten('Spelling');
+});
+
+export { loadPakketten };

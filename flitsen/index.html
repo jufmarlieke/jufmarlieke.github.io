@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Woorden Flitsen</title>
+    <title>Oefenprogramma</title>
     <link rel="stylesheet" href="style.css">
-    <script src="woordpakketten.js"></script>
-    <script src="script.js"></script>
-    <script src="spelling.js"></script>
-    <script src="lezen.js"></script>
 </head>
 <body>
     <h1>Oefenprogramma</h1>
+
     <div id="subjectMenu">
-        <button onclick="showControls('taal')">Taal</button>
-        <button onclick="showControls('spelling')">Spelling</button>
-        <button onclick="showControls('lezen')">Lezen</button>
-        <button onclick="showControls('rekenen')">Rekenen</button>
+        <button id="spellingButton" onclick="showControls('spelling')">Spelling</button>
+        <button id="lezenButton" onclick="showControls('lezen')">Lezen</button>
+        
+
     </div>
+
     <div id="controls" style="display: none;">
         <div class="form-group">
             <label for="groupSelect">Kies Groep:</label>
@@ -114,5 +112,10 @@
     </div>
     <button id="closeButton" style="display: none;" onclick="closeResults()">Sluiten</button>
     <button id="backToMenuButton" style="display: none;" onclick="returnToMenu()">Terug naar startmenu</button>
+   
+    <script type="module" src="utils.js"></script>
+    <script type="module" src="spelling.js"></script>
+    <script type="module" src="lezen.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

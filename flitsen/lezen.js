@@ -1,45 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('groupSelect').addEventListener('change', loadPakkettenLezen);
-    loadPakkettenLezen();
-});
+import { createElement, createPakketElement, updateSelectedPakketten } from './utils.js';
 
-function loadPakkettenLezen() {
-    const group = document.getElementById('groupSelect').value;
-    const lezenSelectie = document.getElementById('pakketSelectieLezen');
-    
-    lezenSelectie.innerHTML = '';
-    
-    if (!woordpakketten[group]) {
-        return;
-    }
+let wordsLezen = [];
+let selectedPakkettenLezen = [];
 
-    const pakketten = woordpakketten[group];
-
-    for (const [pakket, woorden] of Object.entries(pakketten)) {
-        let pakketElementLezen = document.createElement('div');
-        pakketElementLezen.className = 'pakket-element';
-        pakketElementLezen.innerHTML = `
-            <div class="pakket-title">${pakket}</div>
-            <div class="pakket-buttons">
-                <button class="edit-button">Bewerken</button>
-                <button class="delete-button">Verwijderen</button>
-            </div>
-        `;
-        pakketElementLezen.querySelector('.pakket-title').onclick = () => selectPakketLezen(woorden, pakket);
-        pakketElementLezen.querySelector('.edit-button').onclick = (e) => {
-            e.stopPropagation();
-            editPakketLezen(pakket, group);
-        };
-        pakketElementLezen.querySelector('.delete-button').onclick = (e) => {
-            e.stopPropagation();
-            deletePakketLezen(pakket, group);
-        };
-        lezenSelectie.appendChild(pakketElementLezen);
-    }
-}
-
-function selectPakketLezen(woorden, pakket) {
-    const group = document.getElementById('groupSelect').value;
+function selectPakket(woorden, pakket, type) {
     const index = selectedPakkettenLezen.indexOf(pakket);
     if (index === -1) {
         wordsLezen.push(...woorden);
@@ -48,24 +12,60 @@ function selectPakketLezen(woorden, pakket) {
         wordsLezen = wordsLezen.filter(word => !woorden.includes(word));
         selectedPakkettenLezen.splice(index, 1);
     }
-    document.getElementById('selectedPakketLezen').innerText = `Geselecteerde pakketten: ${selectedPakkettenLezen.join(', ')}`;
+
+    updateSelectedPakketten(type, selectedPakkettenLezen);
 }
 
-function editPakketLezen(pakket, group) {
+function editPakket(pakket, group, type) {
     const newWords = prompt('Bewerk de woorden (gescheiden door komma\'s):', woordpakketten[group][pakket].join(', '));
     if (newWords !== null) {
         woordpakketten[group][pakket] = newWords.split(',').map(word => word.trim());
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakkettenLezen();
+        loadPakketten(type);
         alert(`Pakket "${pakket}" succesvol bewerkt.`);
     }
 }
 
-function deletePakketLezen(pakket, group) {
+function deletePakket(pakket, group, type) {
     if (confirm(`Weet je zeker dat je het pakket "${pakket}" wilt verwijderen?`)) {
         delete woordpakketten[group][pakket];
         localStorage.setItem('woordpakketten', JSON.stringify(woordpakketten));
-        loadPakkettenLezen();
+        loadPakketten(type);
         alert(`Pakket "${pakket}" succesvol verwijderd.`);
     }
 }
+
+function loadPakketten(type) {
+    const group = document.getElementById('groupSelect').value || 'groep4';
+    const selectie = document.getElementById(`pakketSelectie${type}`);
+    
+    selectie.innerHTML = '';
+    
+    if (!woordpakketten[group]) return;
+
+    const pakketten = woordpakketten[group];
+
+    const fragment = document.createDocumentFragment();
+
+    for (const [pakket, woorden] of Object.entries(pakketten)) {
+        const pakketElement = createPakketElement(
+            pakket, 
+            woorden, 
+            type, 
+            group, 
+            (woorden, pakket) => selectPakket(woorden, pakket, type),
+            (pakket, group) => editPakket(pakket, group, type),
+            (pakket, group) => deletePakket(pakket, group, type)
+        );
+        fragment.appendChild(pakketElement);
+    }
+
+    selectie.appendChild(fragment);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('groupSelect').addEventListener('change', () => loadPakketten('Lezen'));
+    loadPakketten('Lezen');
+});
+
+export { loadPakketten };
